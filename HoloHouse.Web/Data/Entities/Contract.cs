@@ -1,11 +1,9 @@
 ﻿using HoloHouse.Web.Data.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-//using static Microsoft.EntityFrameworkCore.Internal.DbContextPool<TContext>;
 
 namespace HoloHouse.Web.Data.Entities
 {
@@ -16,17 +14,17 @@ namespace HoloHouse.Web.Data.Entities
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public string Remarks { get; set; }
 
-        [Display(Name = "Price")]
+        [Display(Name = "Price*")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
-        [Display(Name = "Start Date")]
+        [Display(Name = "Start Date*")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
-        [Display(Name = "End Date")]
+        [Display(Name = "End Date*")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
@@ -34,12 +32,12 @@ namespace HoloHouse.Web.Data.Entities
         [Display(Name = "Is Active?")]
         public bool IsActive { get; set; }
 
-        [Display(Name = "Start Date")]
+        [Display(Name = "Start Date*")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDateLocal => StartDate.ToLocalTime();
 
-        [Display(Name = "End Date")]
+        [Display(Name = "End Date*")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDateLocal => EndDate.ToLocalTime();

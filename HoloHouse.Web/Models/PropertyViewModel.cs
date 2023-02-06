@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using HoloHouse.Web.Data.Entities;
 
+
 namespace HoloHouse.Web.Models
 {
     public class PropertyViewModel : Property

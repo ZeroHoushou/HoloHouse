@@ -6,6 +6,6 @@ namespace HoloHouse.Web.Data.Entities
     {
         public int Id { get; set; }
 
-        public User User { get; set; }
+        //public User User { get; set; }
     }
 }
