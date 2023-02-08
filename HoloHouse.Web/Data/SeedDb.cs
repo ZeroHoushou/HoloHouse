@@ -24,9 +24,9 @@ namespace HoloHouse.Web.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckRoles();
-            var manager = await CheckUserAsync("2022", "Rafael", "Bojorquez", "jzuluaga55@gmail.com", "350 634 2747", "Calle Luna Calle Sol", "Manager");
-            var owner = await CheckUserAsync("2023", "Anthony", "Sandoval", "jzuluaga55@hotmail.com", "350 634 2747", "Calle Luna Calle Sol", "Owner");
-            var lessee = await CheckUserAsync("2021", "Erick", "Palomino", "carlos.zuluaga@globant.com", "350 634 2747", "Calle Luna Calle Sol", "Lessee");
+            var manager = await CheckUserAsync("2022", "Rafael", "Bojorquez", "rbojorquez@gmail.com", "350 634 2747", "Calle Luna Calle Sol", "Manager");
+            var owner = await CheckUserAsync("2023", "Anthony", "Sandoval", "aksandoval@gmail.com", "350 634 2747", "Calle Luna Calle Sol", "Owner");
+            var lessee = await CheckUserAsync("2021", "Erick", "Palomino", "epalomino@gmail.com", "350 634 2747", "Calle Luna Calle Sol", "Lessee");
             await CheckPropertyTypesAsync();
             await CheckManagerAsync(manager);
             await CheckOwnersAsync(owner);

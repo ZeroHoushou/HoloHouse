@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HoloHouse.Web.Data;
 using HoloHouse.Web.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace HoloHouse.Web.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class OwnersController : Controller
     {
         private readonly DataContext _context;

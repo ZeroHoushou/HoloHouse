@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using HoloHouse.Web.Data.Entities;
+using HoloHouse.Web.Models;
 using Microsoft.AspNetCore.Identity;
 
 
@@ -16,5 +17,8 @@ namespace HoloHouse.Web.Helpers
         Task AddUserToRoleAsync(User user, string roleName);
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+        Task LogoutAsync();
+
     }
 }
