@@ -9,26 +9,27 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.User.Document)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Document)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User.FirstName)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User.FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User.LastName)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User.Email)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Address)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User.Address)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User.PhoneNumber)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User.PhoneNumber)
             </th>
             <th>
                 Properties
@@ -53,10 +54,10 @@
                     @Html.DisplayFor(modelItem => item.User.LastName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.Email)
+                    @Html.DisplayFor(modelItem => item.User.Address)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.Address)
+                    @Html.DisplayFor(modelItem => item.User.Email)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.User.PhoneNumber)
