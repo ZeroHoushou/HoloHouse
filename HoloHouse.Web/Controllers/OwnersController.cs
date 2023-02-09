@@ -20,11 +20,15 @@ namespace HoloHouse.Web.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
+        private readonly ICombosHelper _combosHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public OwnersController(DataContext context, IUserHelper userHelper)
+        public OwnersController(DataContext context, IUserHelper userHelper, ICombosHelper combosHelper, IConverterHelper converterHelper)
         {
             _dataContext = context;
             _userHelper = userHelper;
+            _combosHelper = combosHelper;
+            _converterHelper = converterHelper;
 
         }
         public IActionResult Index()
@@ -245,6 +249,79 @@ namespace HoloHouse.Web.Controllers
             return View(model);
         }
 
-       
+        public async Task<IActionResult> AddProperty(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var owner = await _dataContext.Owners.FindAsync(id.Value);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+
+            var view = new PropertyViewModel
+            {
+                OwnerId = owner.Id,
+                PropertyTypes = _combosHelper.GetComboPropertyTypes()
+            };
+
+            return View(view);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProperty(PropertyViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var property = await _converterHelper.ToPropertyAsync(model, true);
+                _dataContext.Properties.Add(property);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.OwnerId}");
+            }
+
+            return View(model);
+        }
+
+        private async Task<Property> ToPropertyAsync(PropertyViewModel view)
+        {
+            return new Property
+            {
+                Address = view.Address,
+                HasParkingLot = view.HasParkingLot,
+                IsAvailable = view.IsAvailable,
+                Neighborhood = view.Neighborhood,
+                Price = view.Price,
+                Rooms = view.Rooms,
+                SquareMeters = view.SquareMeters,
+                Stratum = view.Stratum,
+                Owner = await _dataContext.Owners.FindAsync(view.OwnerId),
+                PropertyType = await _dataContext.PropertyTypes.FindAsync(view.PropertyTypeId),
+                Remarks = view.Remarks
+            };
+        }
+
+        private IEnumerable<SelectListItem> GetComboPropertyTypes()
+        {
+            var list = _dataContext.PropertyTypes.Select(p => new SelectListItem
+            {
+                Text = p.Name,
+                Value = p.Id.ToString()
+            }).OrderBy(p => p.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select a property type...)",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+
+
     }
+
 }
