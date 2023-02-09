@@ -285,24 +285,6 @@ namespace HoloHouse.Web.Controllers
             return View(model);
         }
 
-        private async Task<Property> ToPropertyAsync(PropertyViewModel view)
-        {
-            return new Property
-            {
-                Address = view.Address,
-                HasParkingLot = view.HasParkingLot,
-                IsAvailable = view.IsAvailable,
-                Neighborhood = view.Neighborhood,
-                Price = view.Price,
-                Rooms = view.Rooms,
-                SquareMeters = view.SquareMeters,
-                Stratum = view.Stratum,
-                Owner = await _dataContext.Owners.FindAsync(view.OwnerId),
-                PropertyType = await _dataContext.PropertyTypes.FindAsync(view.PropertyTypeId),
-                Remarks = view.Remarks
-            };
-        }
-
         private IEnumerable<SelectListItem> GetComboPropertyTypes()
         {
             var list = _dataContext.PropertyTypes.Select(p => new SelectListItem
@@ -319,7 +301,39 @@ namespace HoloHouse.Web.Controllers
 
             return list;
         }
+        public async Task<IActionResult> EditProperty(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var property = await _dataContext.Properties
+                .Include(p => p.Owner)
+                .Include(p => p.PropertyType)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            var model = _converterHelper.ToPropertyViewModel(property);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProperty(PropertyViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var property = await _converterHelper.ToPropertyAsync(model, false);
+                _dataContext.Properties.Update(property);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.OwnerId}");
+            }
+
+            return View(model);
+        }
 
 
     }
