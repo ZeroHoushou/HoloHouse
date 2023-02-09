@@ -84,7 +84,7 @@ namespace HoloHouse.Web.Controllers
                     return RedirectToAction("Index");
                 }
 
-                ModelState.AddModelError(string.Empty, "User with this eamil already exists.");
+                ModelState.AddModelError(string.Empty, "Usuario con este email ya existe.");
             }
 
             return View(model);
