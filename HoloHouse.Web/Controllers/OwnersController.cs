@@ -22,14 +22,15 @@ namespace HoloHouse.Web.Controllers
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IImageHelper _imageHelper;
 
-        public OwnersController(DataContext context, IUserHelper userHelper, ICombosHelper combosHelper, IConverterHelper converterHelper)
+        public OwnersController(DataContext context, IUserHelper userHelper, ICombosHelper combosHelper, IConverterHelper converterHelper, IImageHelper imageHelper)
         {
             _dataContext = context;
             _userHelper = userHelper;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
-
+            _imageHelper = imageHelper;
         }
         public IActionResult Index()
         {
@@ -246,6 +247,32 @@ namespace HoloHouse.Web.Controllers
             {
                 Id = property.Id
             };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImage(PropertyImageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = string.Empty;
+
+                if (model.ImageFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
+                }
+
+                var propertyImage = new PropertyImage
+                {
+                    ImageUrl = path,
+                    Property = await _dataContext.Properties.FindAsync(model.Id)
+                };
+
+                _dataContext.PropertyImages.Add(propertyImage);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsProperty)}/{model.Id}");
+            }
 
             return View(model);
         }
