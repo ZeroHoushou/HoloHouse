@@ -69,7 +69,7 @@ namespace HoloHouse.Web.Helpers
         {
             return new Contract
             {
-                EndDate = model.EndDate.ToUniversalTime(),
+                EndDate = model.EndDate,
                 Id = isNew ? 0 : model.Id,
                 IsActive = model.IsActive,
                 Lessee = await _dataContext.Lessees.FindAsync(model.LesseeId),
@@ -77,8 +77,26 @@ namespace HoloHouse.Web.Helpers
                 Price = model.Price,
                 Property = await _dataContext.Properties.FindAsync(model.PropertyId),
                 Remarks = model.Remarks,
-                StartDate = model.StartDate.ToUniversalTime(),
+                StartDate = model.StartDate
             };
         }
+
+        public ContractViewModel ToContractViewModel(Contract contract)
+        {
+            return new ContractViewModel
+            {
+                EndDate = contract.EndDate,
+                IsActive = contract.IsActive,
+                LesseeId = contract.Lessee.Id,
+                OwnerId = contract.Owner.Id,
+                Price = contract.Price,
+                Remarks = contract.Remarks,
+                StartDate = contract.StartDate,
+                Id = contract.Id,
+                Lessees = _combosHelper.GetComboLessees(),
+                PropertyId = contract.Property.Id
+            };
+        }
+
     }
 }

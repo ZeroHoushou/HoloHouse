@@ -55,7 +55,5 @@ namespace HoloHouse.Web.Helpers
 
             return list;
         }
-
-
     }
 }
