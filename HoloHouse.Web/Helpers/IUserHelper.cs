@@ -11,7 +11,7 @@ namespace HoloHouse.Web.Helpers
         Task<User> GetUserByEmailAsync(string email);
 
         Task<IdentityResult> AddUserAsync(User user, string password);
-
+        Task<bool> DeleteUserAsync(string email);
         Task CheckRoleAsync(string roleName);
 
         Task AddUserToRoleAsync(User user, string roleName);
