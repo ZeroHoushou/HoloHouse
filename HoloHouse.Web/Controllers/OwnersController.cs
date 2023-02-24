@@ -233,6 +233,35 @@ namespace HoloHouse.Web.Controllers
             return View(property);
         }
 
+        public async Task<IActionResult> DeleteProperty(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var property = await _dataContext.Properties
+                .Include(p => p.Owner)
+                .Include(p => p.PropertyImages)
+                .Include(p => p.Contracts)
+                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            if(property.Contracts.Count != 0)
+            {
+                ModelState.AddModelError(string.Empty, "La propiedad no se puede borrar debido a que tiene contratos");
+                return RedirectToAction($"{nameof(Details)}/{property.Owner.Id}");
+            }
+
+            _dataContext.PropertyImages.RemoveRange(property.PropertyImages);
+            _dataContext.Contracts.RemoveRange(property.Contracts);
+            _dataContext.Properties.Remove(property);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction($"{nameof(Details)}/{property.Owner.Id}");
+        }
 
         public async Task<IActionResult> AddImage(int? id)
         {
