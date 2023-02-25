@@ -342,26 +342,11 @@ namespace HoloHouse.Web.Controllers
                 await _dataContext.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
             }
+            model.PropertyTypes = _combosHelper.GetComboPropertyTypes();
 
             return View(model);
         }
 
-        private IEnumerable<SelectListItem> GetComboPropertyTypes()
-        {
-            var list = _dataContext.PropertyTypes.Select(p => new SelectListItem
-            {
-                Text = p.Name,
-                Value = p.Id.ToString()
-            }).OrderBy(p => p.Text).ToList();
-
-            list.Insert(0, new SelectListItem
-            {
-                Text = "(Select a property type...)",
-                Value = "0"
-            });
-
-            return list;
-        }
         public async Task<IActionResult> EditProperty(int? id)
         {
             if (id == null)
@@ -433,8 +418,31 @@ namespace HoloHouse.Web.Controllers
                 await _dataContext.SaveChangesAsync();
                 return RedirectToAction($"{nameof(DetailsProperty)}/{model.PropertyId}");
             }
+            model.Lessees = _combosHelper.GetComboLessees();
 
             return View(model);
+        }
+        public async Task<IActionResult> DetailsContract(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var contract = await _dataContext.Contracts
+                .Include(c => c.Owner)
+                .ThenInclude(o => o.User)
+                .Include(c => c.Lessee)
+                .ThenInclude(o => o.User)
+                .Include(c => c.Property)
+                .ThenInclude(p => p.PropertyType)
+                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+
+            return View(contract);
         }
 
         public async Task<IActionResult> EditContract(int? id)

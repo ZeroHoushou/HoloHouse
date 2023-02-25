@@ -9,27 +9,26 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
-
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Document)
+                @Html.DisplayNameFor(model => model.User.Document)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().User.FirstName)
+                @Html.DisplayNameFor(model => model.User.FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().User.LastName)
+                @Html.DisplayNameFor(model => model.User.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Address)
+                @Html.DisplayNameFor(model => model.User.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Email)
+                @Html.DisplayNameFor(model => model.User.Address)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().User.PhoneNumber)
+                @Html.DisplayNameFor(model => model.User.PhoneNumber)
             </th>
             <th>
                 Properties
@@ -54,10 +53,10 @@
                     @Html.DisplayFor(modelItem => item.User.LastName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.Address)
+                    @Html.DisplayFor(modelItem => item.User.Email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.Email)
+                    @Html.DisplayFor(modelItem => item.User.Address)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.User.PhoneNumber)
@@ -77,26 +76,8 @@
         }
     </tbody>
 </table>
-<!--Delete Item-->
-<div class="modal fade" id="deleteDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Item</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Do you want to delete the record?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="btnYesDelete">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+<partial name="_DeleteDialog" />
 
 @section Scripts {
     @{
@@ -107,11 +88,9 @@
         $(document).ready(function () {
             // Delete item
             var item_to_delete;
-
             $('.deleteItem').click((e) => {
                 item_to_delete = e.currentTarget.dataset.id;
             });
-
             $("#btnYesDelete").click(function () {
                 window.location.href = '/Owners/Delete/' + item_to_delete;
             });
