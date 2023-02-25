@@ -445,6 +445,7 @@ namespace HoloHouse.Web.Controllers
             return View(contract);
         }
 
+
         public async Task<IActionResult> EditContract(int? id)
         {
             if (id == null)
