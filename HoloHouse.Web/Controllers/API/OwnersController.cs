@@ -7,11 +7,15 @@ using HoloHouse.Web.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HoloHouse.Common.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HoloHouse.Web.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class OwnersController : ControllerBase
     {
         private readonly DataContext _dataContext;
@@ -55,7 +59,7 @@ namespace HoloHouse.Web.Controllers.API
                 Document = owner.User.Document,
                 Email = owner.User.Email,
                 PhoneNumber = owner.User.PhoneNumber,
-                Properties = owner.Properties?.Select(p => new PropertyResponse
+                Properties = owner.Properties?.Select(p => new PropertyResponse 
                 {
                     Address = p.Address,
                     Contracts = p.Contracts?.Select(c => new ContractResponse
