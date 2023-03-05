@@ -21,4 +21,8 @@
     <PackageReference Include="MimeKit" Version="2.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HoloHouse.Common\HoloHouse.Common.csproj" />
+  </ItemGroup>
+
 </Project>
