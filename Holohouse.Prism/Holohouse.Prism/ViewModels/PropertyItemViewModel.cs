@@ -23,8 +23,6 @@ namespace Holohouse.Prism.ViewModels
 
         private async void SelectProperty()
         {
-            Settings.PropertyImages = JsonConvert.SerializeObject(PropertyImages);
-
             var parameters = new NavigationParameters
             {
                 { "property", this }
@@ -32,5 +30,7 @@ namespace Holohouse.Prism.ViewModels
 
             await _navigationService.NavigateAsync("PropertyPage", parameters);
         }
+
+
     }
 }
