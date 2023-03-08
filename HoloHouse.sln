@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloHouse.Common", "HoloHou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoloHouse.Web", "HoloHouse.Web\HoloHouse.Web.csproj", "{8388C64C-1894-4D66-B0C6-8645C7744032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holohouse.Prism", "Holohouse.Prism\Holohouse.Prism\Holohouse.Prism.csproj", "{26BDACDA-BB3A-4F5E-950A-D7D15C0C48AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holohouse.Prism", "Holohouse.Prism\Holohouse.Prism\Holohouse.Prism.csproj", "{26BDACDA-BB3A-4F5E-950A-D7D15C0C48AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holohouse.Prism.Android", "Holohouse.Prism\Holohouse.Prism.Android\Holohouse.Prism.Android.csproj", "{BD7B19F4-4060-4F0A-886E-F5F78D57255C}"
 EndProject
