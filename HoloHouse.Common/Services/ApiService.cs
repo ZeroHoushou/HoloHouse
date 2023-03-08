@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using HoloHouse.Common.Models;
 using HoloHouse.Common.Services;
-
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 
@@ -58,7 +57,7 @@ namespace HoloHouse.Common.Services
             }
         }
 
-        public async Task<Response<OwnerResponse>> GetOwnerByEmail(
+        public async Task<Response<OwnerResponse>> GetOwnerByEmailAsync(
             string urlBase,
             string servicePrefix,
             string controller,
@@ -107,7 +106,7 @@ namespace HoloHouse.Common.Services
             }
         }
 
-        public async Task<bool> CheckConnection(string url)
+        public async Task<bool> CheckConnectionAsync(string url)
         {
             if (!CrossConnectivity.Current.IsConnected)
             {

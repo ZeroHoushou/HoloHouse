@@ -6,7 +6,7 @@ namespace HoloHouse.Common.Services
 {
     public interface IApiService
     {
-        Task<Response<OwnerResponse>> GetOwnerByEmail(
+        Task<Response<OwnerResponse>> GetOwnerByEmailAsync(
             string urlBase,
             string servicePrefix,
             string controller,
@@ -20,6 +20,6 @@ namespace HoloHouse.Common.Services
             string controller,
             TokenRequest request);
 
-        Task<bool> CheckConnection(string url);
+        Task<bool> CheckConnectionAsync(string url);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HoloHouse.Common.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HoloHouse.Common.Models
 {
@@ -30,5 +31,17 @@ namespace HoloHouse.Common.Models
         public ICollection<PropertyImageResponse> PropertyImages { get; set; }
 
         public ICollection<ContractResponse> Contracts { get; set; }
+        public string FirstImage
+        {
+            get
+            {
+                if (PropertyImages == null || PropertyImages.Count == 0)
+                {
+                    return "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+                }
+
+                return PropertyImages.FirstOrDefault().ImageUrl;
+            }
+        }
     }
 }
