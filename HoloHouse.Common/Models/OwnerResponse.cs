@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HoloHouse.Common.Models;
+using System.Collections.Generic;
 
 namespace HoloHouse.Common.Models
 {
@@ -19,6 +20,11 @@ namespace HoloHouse.Common.Models
         public string Email { get; set; }
 
         public ICollection<PropertyResponse> Properties { get; set; }
+
+        public ICollection<ContractResponse> Contracts { get; set; }
+
+        public int RoleId { get; set; }
+
         public string FullName => $"{FirstName} {LastName}";
     }
 }
