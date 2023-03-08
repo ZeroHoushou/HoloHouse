@@ -36,6 +36,7 @@ namespace Holohouse.Prism
             containerRegistry.RegisterForNavigation<PropertyPage, PropertyPageViewModel>();
             containerRegistry.RegisterForNavigation<ContractsPage, ContractsPageViewModel>();
             containerRegistry.RegisterForNavigation<ContractPage, ContractPageViewModel>();
+            containerRegistry.RegisterForNavigation<PropertyTabbedPage, PropertyTabbedPageViewModel>();
         }
     }
 }

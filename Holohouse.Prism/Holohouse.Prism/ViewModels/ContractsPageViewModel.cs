@@ -1,5 +1,7 @@
-﻿using HoloHouse.Common.Models;
+﻿using HoloHouse.Common.Helpers;
+using HoloHouse.Common.Models;
 using Holohouse.Prism.ViewModels;
+using Newtonsoft.Json;
 using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,6 +19,8 @@ namespace Holohouse.Prism.ViewModels
         {
             _navigationService = navigationService;
             Title = "Contracts";
+            Property = JsonConvert.DeserializeObject<PropertyResponse>(Settings.Property);
+            LoadContracts();
         }
 
         public PropertyResponse Property
@@ -29,17 +33,6 @@ namespace Holohouse.Prism.ViewModels
         {
             get => _contracts;
             set => SetProperty(ref _contracts, value);
-        }
-
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-
-            if (parameters.ContainsKey("property"))
-            {
-                Property = parameters.GetValue<PropertyResponse>("property");
-                LoadContracts();
-            }
         }
 
         private void LoadContracts()

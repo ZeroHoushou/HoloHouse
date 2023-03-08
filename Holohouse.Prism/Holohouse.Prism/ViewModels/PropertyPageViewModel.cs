@@ -1,9 +1,10 @@
-﻿using HoloHouse.Common.Models;
+﻿using HoloHouse.Common.Helpers;
+using HoloHouse.Common.Models;
 using Holohouse.Prism.ViewModels;
-
+using Newtonsoft.Json;
 using Prism.Navigation;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Holohouse.Prism.ViewModels
 {
@@ -12,16 +13,9 @@ namespace Holohouse.Prism.ViewModels
         private PropertyResponse _property;
         private ObservableCollection<RotatorModel> _imageCollection;
 
-        public PropertyPageViewModel(
-            INavigationService navigationService) : base(navigationService)
+        public PropertyPageViewModel(INavigationService navigationService) : base(navigationService)
         {
-            Title = "Property";
-        }
-
-        public ObservableCollection<RotatorModel> ImageCollection
-        {
-            get => _imageCollection;
-            set => SetProperty(ref _imageCollection, value);
+            Title = "Details";
         }
 
         public PropertyResponse Property
@@ -30,27 +24,25 @@ namespace Holohouse.Prism.ViewModels
             set => SetProperty(ref _property, value);
         }
 
+        public ObservableCollection<RotatorModel> ImageCollection
+        {
+            get => _imageCollection;
+            set => SetProperty(ref _imageCollection, value);
+        }
+
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-
-            if (parameters.ContainsKey("property"))
-            {
-                Property = parameters.GetValue<PropertyResponse>("property");
-                Title = $"Property: {Property.Neighborhood}";
-                LoadImages();
-            }
+            Property = JsonConvert.DeserializeObject<PropertyResponse>(Settings.Property);
+            LoadImages();
         }
 
         private void LoadImages()
         {
-            var list = new List<RotatorModel>();
-            foreach (var propertyImage in Property.PropertyImages)
+            ImageCollection = new ObservableCollection<RotatorModel>(Property.PropertyImages.Select(pi => new RotatorModel
             {
-                list.Add(new RotatorModel { Image = propertyImage.ImageUrl });
-            }
-
-            ImageCollection = new ObservableCollection<RotatorModel>(list);
+                Image = pi.ImageUrl
+            }).ToList());
         }
     }
 }
