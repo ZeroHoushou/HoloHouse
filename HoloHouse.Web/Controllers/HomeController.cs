@@ -1,10 +1,11 @@
-﻿using HoloHouse.Web.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using HoloHouse.Web.Models;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace HoloHouse.Web.Controllers
 {
@@ -38,6 +39,12 @@ namespace HoloHouse.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Route("error/404")]
+        public IActionResult Error404()
+        {
+            return View();
         }
     }
 }

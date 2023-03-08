@@ -19,5 +19,6 @@ namespace HoloHouse.Web.Helpers
         Task<SignInResult> LoginAsync(LoginViewModel model);
         Task LogoutAsync();
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
+        Task<User> AddUser(AddUserViewModel view, string role);
     }
 }

@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using HoloHouse.Web.Data;
-using HoloHouse.Web.Data.Entities;
-using HoloHouse.Web.Models;
+using HoloHouse.Web.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace HoloHouse.Web.Helpers
 {
@@ -16,6 +13,25 @@ namespace HoloHouse.Web.Helpers
         public CombosHelper(DataContext dataContext)
         {
             _dataContext = dataContext;
+        }
+
+        public IEnumerable<SelectListItem> GetComboLessees()
+        {
+            var list = _dataContext.Lessees.Select(l => new SelectListItem
+            {
+                Text = l.User.FullNameWithDocument,
+                Value = $"{l.Id}"
+            })
+                .OrderBy(pt => pt.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select a lessee...)",
+                Value = "0"
+            });
+
+            return list;
         }
 
         public IEnumerable<SelectListItem> GetComboPropertyTypes()
@@ -37,21 +53,14 @@ namespace HoloHouse.Web.Helpers
             return list;
         }
 
-        public IEnumerable<SelectListItem> GetComboLessees()
+        public IEnumerable<SelectListItem> GetComboRoles()
         {
-            var list = _dataContext.Lessees.Select(l => new SelectListItem
+            var list = new List<SelectListItem>
             {
-                Text = l.User.FullNameWithDocument,
-                Value = $"{l.Id}"
-            })
-                .OrderBy(pt => pt.Text)
-                .ToList();
-
-            list.Insert(0, new SelectListItem
-            {
-                Text = "(Select a lessee...)",
-                Value = "0"
-            });
+                new SelectListItem { Value = "0", Text = "(Select a role...)" },
+                new SelectListItem { Value = "1", Text = "Lessee" },
+                new SelectListItem { Value = "2", Text = "Owner" }
+            };
 
             return list;
         }

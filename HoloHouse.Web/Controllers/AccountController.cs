@@ -1,36 +1,43 @@
-﻿using HoloHouse.Web.Helpers;
-using HoloHouse.Web.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using HoloHouse.Web.Data.Entities;
+using HoloHouse.Web.Data;
+using HoloHouse.Web.Helpers;
+using HoloHouse.Web.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+
 
 namespace HoloHouse.Web.Controllers
 {
-
     public class AccountController : Controller
     {
+        private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
+        private readonly ICombosHelper _combosHelper;
 
-        public AccountController(IUserHelper userHelper, IConfiguration configuration)
+        public AccountController(
+            DataContext dataContext,
+            IUserHelper userHelper,
+            IConfiguration configuration,
+            ICombosHelper combosHelper)
         {
+            _dataContext = dataContext;
             _userHelper = userHelper;
             _configuration = configuration;
+            _combosHelper = combosHelper;
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return View();
         }
 
@@ -49,12 +56,14 @@ namespace HoloHouse.Web.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+
+                ModelState.AddModelError(string.Empty, "User or password incorrect.");
             }
 
-            ModelState.AddModelError(string.Empty, "Usuario o contraseña inconrrecto");
             return View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
@@ -77,9 +86,9 @@ namespace HoloHouse.Web.Controllers
                     {
                         var claims = new[]
                         {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        };
 
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
                         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -87,7 +96,7 @@ namespace HoloHouse.Web.Controllers
                             _configuration["Tokens:Issuer"],
                             _configuration["Tokens:Audience"],
                             claims,
-                            expires: DateTime.UtcNow.AddDays(15),
+                            expires: DateTime.UtcNow.AddMonths(6),
                             signingCredentials: credentials);
                         var results = new
                         {
@@ -103,6 +112,82 @@ namespace HoloHouse.Web.Controllers
             return BadRequest();
         }
 
+        public IActionResult NotAuthorized()
+        {
+            return View();
+        }
 
+        public IActionResult Register()
+        {
+            var model = new AddUserViewModel
+            {
+                Roles = _combosHelper.GetComboRoles()
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(AddUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var role = "Owner";
+                if (model.RoleId == 1)
+                {
+                    role = "Lessee";
+                }
+
+                var user = await _userHelper.AddUser(model, role);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "This email is already used.");
+                    return View(model);
+                }
+
+                if (model.RoleId == 1)
+                {
+                    var lessee = new Lessee
+                    {
+                        Contracts = new List<Contract>(),
+                        User = user
+                    };
+
+                    _dataContext.Lessees.Add(lessee);
+                }
+                else
+                {
+                    var owner = new Owner
+                    {
+                        Contracts = new List<Contract>(),
+                        Properties = new List<Property>(),
+                        User = user
+                    };
+
+                    _dataContext.Owners.Add(owner);
+                }
+
+                await _dataContext.SaveChangesAsync();
+
+                var loginViewModel = new LoginViewModel
+                {
+                    Password = model.Password,
+                    RememberMe = false,
+                    Username = model.Username
+                };
+
+                var result2 = await _userHelper.LoginAsync(loginViewModel);
+
+                if (result2.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            model.Roles = _combosHelper.GetComboRoles();
+            return View(model);
+        }
     }
 }
