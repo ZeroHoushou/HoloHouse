@@ -1,6 +1,7 @@
 ﻿using HoloHouse.Web.Data.Entities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace HoloHouse.Web.Data.Entities
 {
@@ -8,30 +9,29 @@ namespace HoloHouse.Web.Data.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Neighborhood*")]
+        [Display(Name = "Neighborhood")]
         [MaxLength(50, ErrorMessage = "The {0} field can not have more than {1} characters.")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public string Neighborhood { get; set; }
 
-        [Display(Name = "Address*")]
+        [Display(Name = "Address")]
         [MaxLength(50, ErrorMessage = "The {0} field can not have more than {1} characters.")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public string Address { get; set; }
 
-        [Display(Name = "Price*")]
+        [Display(Name = "Price")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
-        [Display(Name = "Square meters*")]
+        [Display(Name = "Square meters")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public int SquareMeters { get; set; }
 
-        [Display(Name = "Rooms*")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public int Rooms { get; set; }
 
-        [Display(Name = "Stratum*")]
+        [Display(Name = "Stratum")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public int Stratum { get; set; }
 
@@ -50,5 +50,18 @@ namespace HoloHouse.Web.Data.Entities
         public ICollection<PropertyImage> PropertyImages { get; set; }
 
         public ICollection<Contract> Contracts { get; set; }
+
+        public string FirstImage
+        {
+            get
+            {
+                if (PropertyImages == null || PropertyImages.Count == 0)
+                {
+                    return "https://holohouse.azurewebsites.net/images/Properties/noImage.png";
+                }
+
+                return PropertyImages.FirstOrDefault().ImageUrl;
+            }
+        }
     }
 }

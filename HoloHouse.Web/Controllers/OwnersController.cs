@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HoloHouse.Web.Data;
 using HoloHouse.Web.Data.Entities;
-using Microsoft.AspNetCore.Authorization;
-using System.Data;
-using HoloHouse.Web.Models;
-using Microsoft.AspNetCore.Identity;
+using HoloHouse.Web.Data;
 using HoloHouse.Web.Helpers;
+using HoloHouse.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HoloHouse.Web.Controllers
 {
@@ -23,15 +20,24 @@ namespace HoloHouse.Web.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
+        private readonly IMailHelper _mailHelper;
 
-        public OwnersController(DataContext context, IUserHelper userHelper, ICombosHelper combosHelper, IConverterHelper converterHelper, IImageHelper imageHelper)
+        public OwnersController(
+            DataContext dataContext,
+            IUserHelper userHelper,
+            ICombosHelper combosHelper,
+            IConverterHelper converterHelper,
+            IImageHelper imageHelper,
+            IMailHelper mailHelper)
         {
-            _dataContext = context;
+            _dataContext = dataContext;
             _userHelper = userHelper;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
             _imageHelper = imageHelper;
+            _mailHelper = mailHelper;
         }
+
         public IActionResult Index()
         {
             return View(_dataContext.Owners
@@ -87,10 +93,23 @@ namespace HoloHouse.Web.Controllers
 
                     _dataContext.Owners.Add(owner);
                     await _dataContext.SaveChangesAsync();
-                    return RedirectToAction("Index");
+
+                    var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    var tokenLink = Url.Action("ConfirmEmail", "Account", new
+                    {
+                        userid = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);
+
+                    //_mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    //    $"To allow the user, " +
+                    //    $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+
+
+                    return RedirectToAction(nameof(Index));
                 }
 
-                ModelState.AddModelError(string.Empty, "Usuario con este email ya existe.");
+                ModelState.AddModelError(string.Empty, "User with this eamil already exists.");
             }
 
             return View(model);
@@ -120,62 +139,57 @@ namespace HoloHouse.Web.Controllers
             return null;
         }
 
-        // GET: Owners/Edit/5
-
-            public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
             {
-                if (id == null)
-                {
-                    return NotFound();
-                }
+                return NotFound();
+            }
 
+            var owner = await _dataContext.Owners
+                .Include(o => o.User)
+                .FirstOrDefaultAsync(o => o.Id == id.Value);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EditUserViewModel
+            {
+                Address = owner.User.Address,
+                Document = owner.User.Document,
+                FirstName = owner.User.FirstName,
+                Id = owner.Id,
+                LastName = owner.User.LastName,
+                PhoneNumber = owner.User.PhoneNumber
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
                 var owner = await _dataContext.Owners
                     .Include(o => o.User)
-                    .FirstOrDefaultAsync(o => o.Id == id.Value);
-                if (owner == null)
-                {
-                    return NotFound();
-                }
+                    .FirstOrDefaultAsync(o => o.Id == model.Id);
 
-                var view = new EditUserViewModel
-                {
-                    Address = owner.User.Address,
-                    Document = owner.User.Document,
-                    FirstName = owner.User.FirstName,
-                    Id = owner.Id,
-                    LastName = owner.User.LastName,
-                    PhoneNumber = owner.User.PhoneNumber
-                };
+                owner.User.Document = model.Document;
+                owner.User.FirstName = model.FirstName;
+                owner.User.LastName = model.LastName;
+                owner.User.Address = model.Address;
+                owner.User.PhoneNumber = model.PhoneNumber;
 
-                return View(view);
+                await _userHelper.UpdateUserAsync(owner.User);
+                return RedirectToAction(nameof(Index));
             }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(EditUserViewModel model)
-            {
-                if (ModelState.IsValid)
-                {
-                    var owner = await _dataContext.Owners
-                        .Include(o => o.User)
-                        .FirstOrDefaultAsync(o => o.Id == model.Id);
+            return View(model);
+        }
 
-                    owner.User.Document = model.Document;
-                    owner.User.FirstName = model.FirstName;
-                    owner.User.LastName = model.LastName;
-                    owner.User.Address = model.Address;
-                    owner.User.PhoneNumber = model.PhoneNumber;
-
-                    await _userHelper.UpdateUserAsync(owner.User);
-                    return RedirectToAction(nameof(Index));
-                }
-
-                return View(model);
-            }
-
-        
-
-        // GET: Owners/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -191,9 +205,10 @@ namespace HoloHouse.Web.Controllers
             {
                 return NotFound();
             }
-            if(owner?.Properties.Count != 0)
+
+            if (owner.Properties.Count != 0)
             {
-                ModelState.AddModelError(string.Empty, "El dueño no puede eliminarse , porque tiene propiedades");
+                ModelState.AddModelError(string.Empty, "Owner can't be delete because it has properties.");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -203,12 +218,81 @@ namespace HoloHouse.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         private bool OwnerExists(int id)
         {
             return _dataContext.Owners.Any(e => e.Id == id);
         }
 
+        public async Task<IActionResult> AddProperty(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var owner = await _dataContext.Owners.FindAsync(id);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+
+            var model = new PropertyViewModel
+            {
+                OwnerId = owner.Id,
+                PropertyTypes = _combosHelper.GetComboPropertyTypes()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProperty(PropertyViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var property = await _converterHelper.ToPropertyAsync(model, true);
+                _dataContext.Properties.Add(property);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.OwnerId}");
+            }
+
+            model.PropertyTypes = _combosHelper.GetComboPropertyTypes();
+            return View(model);
+        }
+
+        public async Task<IActionResult> EditProperty(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var property = await _dataContext.Properties
+                .Include(p => p.Owner)
+                .Include(p => p.PropertyType)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            var model = _converterHelper.ToPropertyViewModel(property);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProperty(PropertyViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var property = await _converterHelper.ToPropertyAsync(model, false);
+                _dataContext.Properties.Update(property);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.OwnerId}");
+            }
+
+            return View(model);
+        }
 
         public async Task<IActionResult> DetailsProperty(int? id)
         {
@@ -232,36 +316,6 @@ namespace HoloHouse.Web.Controllers
             }
 
             return View(property);
-        }
-
-        public async Task<IActionResult> DeleteProperty(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var property = await _dataContext.Properties
-                .Include(p => p.Owner)
-                .Include(p => p.PropertyImages)
-                .Include(p => p.Contracts)
-                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
-            if (property == null)
-            {
-                return NotFound();
-            }
-
-            if(property.Contracts.Count != 0)
-            {
-                ModelState.AddModelError(string.Empty, "La propiedad no se puede borrar debido a que tiene contratos");
-                return RedirectToAction($"{nameof(Details)}/{property.Owner.Id}");
-            }
-
-            _dataContext.PropertyImages.RemoveRange(property.PropertyImages);
-            _dataContext.Contracts.RemoveRange(property.Contracts);
-            _dataContext.Properties.Remove(property);
-            await _dataContext.SaveChangesAsync();
-            return RedirectToAction($"{nameof(Details)}/{property.Owner.Id}");
         }
 
         public async Task<IActionResult> AddImage(int? id)
@@ -311,76 +365,6 @@ namespace HoloHouse.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> AddProperty(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var owner = await _dataContext.Owners.FindAsync(id.Value);
-            if (owner == null)
-            {
-                return NotFound();
-            }
-
-            var view = new PropertyViewModel
-            {
-                OwnerId = owner.Id,
-                PropertyTypes = _combosHelper.GetComboPropertyTypes()
-            };
-
-            return View(view);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddProperty(PropertyViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var property = await _converterHelper.ToPropertyAsync(model, true);
-                _dataContext.Properties.Add(property);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction($"Details/{model.OwnerId}");
-            }
-            model.PropertyTypes = _combosHelper.GetComboPropertyTypes();
-
-            return View(model);
-        }
-
-        public async Task<IActionResult> EditProperty(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var property = await _dataContext.Properties
-                .Include(p => p.Owner)
-                .Include(p => p.PropertyType)
-                .FirstOrDefaultAsync(p => p.Id == id);
-            if (property == null)
-            {
-                return NotFound();
-            }
-
-            var model = _converterHelper.ToPropertyViewModel(property);
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditProperty(PropertyViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var property = await _converterHelper.ToPropertyAsync(model, false);
-                _dataContext.Properties.Update(property);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction($"Details/{model.OwnerId}");
-            }
-
-            return View(model);
-        }
         public async Task<IActionResult> AddContract(int? id)
         {
             if (id == null)
@@ -419,33 +403,10 @@ namespace HoloHouse.Web.Controllers
                 await _dataContext.SaveChangesAsync();
                 return RedirectToAction($"{nameof(DetailsProperty)}/{model.PropertyId}");
             }
-            model.Lessees = _combosHelper.GetComboLessees();
 
+            model.Lessees = _combosHelper.GetComboLessees();
             return View(model);
         }
-        public async Task<IActionResult> DetailsContract(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var contract = await _dataContext.Contracts
-                .Include(c => c.Owner)
-                .ThenInclude(o => o.User)
-                .Include(c => c.Lessee)
-                .ThenInclude(o => o.User)
-                .Include(c => c.Property)
-                .ThenInclude(p => p.PropertyType)
-                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
-            if (contract == null)
-            {
-                return NotFound();
-            }
-
-            return View(contract);
-        }
-
 
         public async Task<IActionResult> EditContract(int? id)
         {
@@ -521,7 +482,56 @@ namespace HoloHouse.Web.Controllers
             return RedirectToAction($"{nameof(DetailsProperty)}/{contract.Property.Id}");
         }
 
+        public async Task<IActionResult> DeleteProperty(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var property = await _dataContext.Properties
+                .Include(p => p.Owner)
+                .Include(p => p.PropertyImages)
+                .Include(p => p.Contracts)
+                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            if (property.Contracts.Count != 0)
+            {
+                ModelState.AddModelError(string.Empty, "The property can't be deleted because it has contracts.");
+                return RedirectToAction($"{nameof(Details)}/{property.Owner.Id}");
+            }
+
+            _dataContext.PropertyImages.RemoveRange(property.PropertyImages);
+            _dataContext.Properties.Remove(property);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction($"{nameof(Details)}/{property.Owner.Id}");
+        }
+
+        public async Task<IActionResult> DetailsContract(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var contract = await _dataContext.Contracts
+                .Include(c => c.Owner)
+                .ThenInclude(o => o.User)
+                .Include(c => c.Lessee)
+                .ThenInclude(o => o.User)
+                .Include(c => c.Property)
+                .ThenInclude(p => p.PropertyType)
+                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+
+            return View(contract);
+        }
     }
-
 }

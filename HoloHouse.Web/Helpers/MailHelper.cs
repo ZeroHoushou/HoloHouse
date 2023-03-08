@@ -1,7 +1,7 @@
-﻿using MailKit.Net.Smtp;
+﻿using HoloHouse.Web.Helpers;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
-using System.Net.Mail;
 
 namespace HoloHouse.Web.Helpers
 {
@@ -31,7 +31,7 @@ namespace HoloHouse.Web.Helpers
             };
             message.Body = bodyBuilder.ToMessageBody();
 
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            using (var client = new SmtpClient())
             {
                 client.Connect(smtp, int.Parse(port), false);
                 client.Authenticate(from, password);

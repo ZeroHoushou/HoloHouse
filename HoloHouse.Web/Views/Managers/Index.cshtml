@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HoloHouse.Web.Data.Entities.PropertyType>
+﻿@model IEnumerable<HoloHouse.Web.Data.Entities.Manager>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,14 +15,29 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Owners</h3>
+                <h3 class="panel-title">Managers</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-hover table-responsive table-striped" id="MyTable">
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Name)
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Document)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.FirstName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.LastName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Address)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().User.PhoneNumber)
                             </th>
                             <th></th>
                         </tr>
@@ -32,10 +47,26 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
+                                    @Html.DisplayFor(modelItem => item.User.Document)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.FirstName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.LastName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.Address)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.PhoneNumber)
                                 </td>
                                 <td>
                                     <a asp-action="Edit" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-pencil"></i> </a>
+                                    <a asp-action="Details" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-list"> </i> </a>
                                     <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
                                 </td>
                             </tr>
@@ -64,7 +95,7 @@
                 item_to_delete = e.currentTarget.dataset.id;
             });
             $("#btnYesDelete").click(function () {
-                window.location.href = '/PropertyTypes/Delete/' + item_to_delete;
+                window.location.href = '/Managers/Delete/' + item_to_delete;
             });
         });
     </script>
