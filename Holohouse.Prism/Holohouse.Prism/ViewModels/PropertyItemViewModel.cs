@@ -1,4 +1,6 @@
-﻿using HoloHouse.Common.Models;
+﻿using HoloHouse.Common.Helpers;
+using HoloHouse.Common.Models;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Navigation;
 using System;
@@ -21,6 +23,8 @@ namespace Holohouse.Prism.ViewModels
 
         private async void SelectProperty()
         {
+            Settings.PropertyImages = JsonConvert.SerializeObject(PropertyImages);
+
             var parameters = new NavigationParameters
             {
                 { "property", this }

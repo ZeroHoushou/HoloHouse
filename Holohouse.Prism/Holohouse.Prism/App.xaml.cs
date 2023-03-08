@@ -19,8 +19,9 @@ namespace Holohouse.Prism
 
         protected override async void OnInitialized()
         {
+            
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTI4MTYzOEAzMjMwMmUzNDJlMzBHRGxJYjN2SkFmbElxTXNsTm5OM25LYTlhaldOcGlGb05GM3NzbTlSNUk4PQ==");
             InitializeComponent();
-
             await NavigationService.NavigateAsync("NavigationPage/LoginPage");
         }
 
