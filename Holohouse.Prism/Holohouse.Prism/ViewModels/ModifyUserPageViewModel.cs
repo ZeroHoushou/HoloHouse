@@ -28,7 +28,7 @@ namespace Holohouse.Prism.ViewModels
             _navigationService = navigationService;
             _apiService = apiService;
 
-            Title = "Modify User";
+            Title = "Modificar Usuario";
             IsEnabled = true;
             Owner = JsonConvert.DeserializeObject<OwnerResponse>(Settings.Owner);
         }

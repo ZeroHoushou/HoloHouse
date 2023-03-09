@@ -7,7 +7,7 @@ namespace Holohouse.Prism.ViewModels
     {
         public MapPageViewModel(INavigationService navigationService) : base(navigationService)
         {
-            Title = "Map";
+            Title = "Mapa de Propiedades";
         }
     }
 }

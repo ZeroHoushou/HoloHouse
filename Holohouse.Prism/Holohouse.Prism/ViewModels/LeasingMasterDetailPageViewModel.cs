@@ -29,35 +29,35 @@ namespace Holohouse.Prism.ViewModels
                 {
                     Icon = "ic_home",
                     PageName = "PropertiesPage",
-                    Title = "Propierties"
+                    Title = "Propiedades"
                 },
 
                 new Menu
                 {
                     Icon = "ic_list_alt",
                     PageName = "ContractsPage",
-                    Title = "Contracts"
+                    Title = "Contratos"
                 },
 
                 new Menu
                 {
                     Icon = "ic_person",
                     PageName = "ModifyUserPage",
-                    Title = "Modify User"
+                    Title = "Modificar Usuario"
                 },
 
                 new Menu
                 {
                     Icon = "ic_map",
                     PageName = "MapPage",
-                    Title = "Map"
+                    Title = "Mapa"
                 },
 
                 new Menu
                 {
                     Icon = "ic_exit_to_app",
                     PageName = "LoginPage",
-                    Title = "Logout"
+                    Title = "Cerrar Sesion"
                 }
             };
 

@@ -81,9 +81,14 @@ namespace Holohouse.Prism.ViewModels
                 Title = "Available Properties";
             }
 
+            Random rnd = new Random();
+            int min = 990000000;
+            int max = 999999999;
+
             Properties = new ObservableCollection<PropertyItemViewModel>(_owner.Properties.Select(p => new PropertyItemViewModel(_navigationService)
             {
                 Address = p.Address,
+                PhoneNumber = (rnd.Next(min,max + 1)).ToString(),
                 Contracts = p.Contracts,
                 HasParkingLot = p.HasParkingLot,
                 IsAvailable = p.IsAvailable,
@@ -96,6 +101,7 @@ namespace Holohouse.Prism.ViewModels
                 Rooms = p.Rooms,
                 SquareMeters = p.SquareMeters,
                 Stratum = p.Stratum
+                
             }).ToList());
         }
 

@@ -6,75 +6,71 @@
              xmlns:i18n="clr-namespace:Holohouse.Prism.Helpers"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="Holohouse.Prism.Views.LoginPage"
-             BackgroundColor="{StaticResource colorBackgroud}"
-             Title="{Binding Title}">
+             Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#065795">
+    <ContentPage.Content>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
 
-    <ScrollView>
-        <AbsoluteLayout>
-            <StackLayout 
-                AbsoluteLayout.LayoutBounds="0,0,1,1"
-                AbsoluteLayout.LayoutFlags="All"
-                Padding="10">
-                <Image
-                    Margin="-30,60,0,60"
-                    Source="logo"
-                    WidthRequest="230"/>
-                <Label
-                    Text="{i18n:Translate Email}"/>
-                <Entry
-                    Keyboard="Email"
-                    Placeholder="{i18n:Translate EmailPlaceHolder}"
-                    Text="{Binding Email}"/>
-                <Label
-                    Text="{i18n:Translate Password}"/>
-                <Entry
-                    IsPassword="True"
-                    Placeholder="{i18n:Translate PasswordPlaceHolder}"
-                    Text="{Binding Password}"/>
-                <StackLayout
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0" Margin="-35,45,0,20" Source="logo.png" Aspect="AspectFit" HeightRequest="100" WidthRequest="50" ></Image>
+            <Frame Grid.Row="1" Margin="20,30" BorderColor="#065795" HasShadow="True"  CornerRadius="50" >
+                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" RowSpacing="20" Padding="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"  Text="Bienvenido de vuelta!" FontSize="24" FontAttributes="Bold" TextColor="#1C375C" HorizontalOptions="CenterAndExpand"></Label>
+                    <Label Grid.Row="1" Margin="0,-15,0,0" Text="Ingresa con tu cuenta" TextColor="#1C375C"  HorizontalOptions="CenterAndExpand"></Label>
+                    <Entry Grid.Row="2" Placeholder="Usuario" Keyboard="Email" Margin="0,20,0,0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Text="{Binding Email}"></Entry>
+                    <Entry Grid.Row="3" Placeholder="Contraseña" IsPassword="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Text="{Binding Password}"></Entry>
+                    <StackLayout
 	                HorizontalOptions="Center"
-	                Orientation="Horizontal">
-                    <Label
+	                Orientation="Horizontal" Grid.Row="4">
+                        <Label
     	                Text="{i18n:Translate Rememberme}"
     	                VerticalOptions="Center"/>
-                    <CheckBox
+                        <CheckBox
     	                IsChecked="{Binding IsRemember}"/>
-                </StackLayout>
-                <Label
-	                HorizontalOptions="Center"
-	                FontAttributes="Bold"
-	                Text="{i18n:Translate ForgotPassword}"
-	                TextColor="{StaticResource colorPrimary}">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}"/>
-                    </Label.GestureRecognizers>
-                </Label>
-                <StackLayout
-                    Orientation="Horizontal"
-                    VerticalOptions="EndAndExpand">
-                    <Button
-                        Command="{Binding LoginCommand}"
-                        IsEnabled="{Binding IsEnabled}"
-                        Text="{i18n:Translate Login}"/>
-                    <Button
-                        Command="{Binding RegisterCommand}"
-                        IsEnabled="{Binding IsEnabled}"
-                        Style="{StaticResource secondaryButton}"
-                        Text="{i18n:Translate Register}"/>
-                </StackLayout>
-            </StackLayout>
-            <busyindicator:SfBusyIndicator  
+                    </StackLayout>
+                    <Button Command="{Binding LoginCommand}"
+                        IsEnabled="{Binding IsEnabled}" Grid.Row="5" Text="Iniciar Sesión" BackgroundColor="#065795" CornerRadius="20"></Button>
+                    <Label Grid.Row="7" Text="Olvidaste tu contraseña ?" FontAttributes="Bold" HorizontalOptions="CenterAndExpand">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Row="8"  Text="No tienes cuenta? Registrate aquí" HorizontalOptions="CenterAndExpand">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RegisterCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <busyindicator:SfBusyIndicator  
                 AnimationType="Box"
                 AbsoluteLayout.LayoutBounds=".5,.5,.5,.5"
                 AbsoluteLayout.LayoutFlags="All"
                 BackgroundColor="Transparent"
                 HorizontalOptions="Center"
-                TextColor="Blue"
+                TextColor="#065795"
                 IsVisible="{Binding IsRunning}"
                 Title="{i18n:Translate Loading}"
                 VerticalOptions="Center"
                 ViewBoxWidth="80"
                 ViewBoxHeight="80" />
-        </AbsoluteLayout>
-    </ScrollView>
+                </Grid>
+                
+            </Frame>
+            
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

@@ -23,7 +23,7 @@
                     <Label
                 	    Grid.Row="0"
                 	    Grid.Column="0"
-                	    Text="Document"
+                	    Text="DNI"
                 	    VerticalOptions="Center"/>
                     <Entry
                 	    Grid.Row="0"
@@ -34,7 +34,7 @@
                     <Label
                 	    Grid.Row="1"
                 	    Grid.Column="0"
-                	    Text="First Name"
+                	    Text="Nombre"
                 	    VerticalOptions="Center"/>
                     <Entry
                 	    Grid.Row="1"
@@ -45,7 +45,7 @@
                     <Label
                 	    Grid.Row="2"
                 	    Grid.Column="0"
-                	    Text="Last Name"
+                	    Text="Apellido"
                 	    VerticalOptions="Center"/>
                     <Entry
                 	    Grid.Row="2"
@@ -56,7 +56,7 @@
                     <Label
                 	    Grid.Row="3"
                 	    Grid.Column="0"
-                	    Text="Address"
+                	    Text="Direccion"
                 	    VerticalOptions="Center"/>
                     <Entry
                 	    Grid.Row="3"
@@ -67,7 +67,7 @@
                     <Label
                 	    Grid.Row="4"
                 	    Grid.Column="0"
-                	    Text="Phone"
+                	    Text="Telefono"
                 	    VerticalOptions="Center"/>
                     <Entry
                 	    Grid.Row="4"
@@ -84,14 +84,14 @@
                 	    Command="{Binding SaveCommand}"
                 	    HorizontalOptions="FillAndExpand"
                 	    IsEnabled="{Binding IsEnabled}"
-                	    Text="Save"/>
+                	    Text="Guardar"/>
 
                     <Button
                 	    Command="{Binding ChangePasswordCommand}"
                 	    HorizontalOptions="FillAndExpand"
                 	    IsEnabled="{Binding IsEnabled}"
                 	    Style="{StaticResource secondaryButton}"
-                	    Text="Change Password"/>
+                	    Text="Cambiar Contraseña"/>
                 </StackLayout>
             </StackLayout>
             <busyindicator:SfBusyIndicator  
