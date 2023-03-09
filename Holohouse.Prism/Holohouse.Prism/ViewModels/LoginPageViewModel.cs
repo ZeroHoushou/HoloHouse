@@ -1,4 +1,5 @@
-﻿using HoloHouse.Common.Helpers;
+﻿using System;
+using HoloHouse.Common.Helpers;
 using HoloHouse.Common.Models;
 using HoloHouse.Common.Services;
 using Holohouse.Prism.ViewModels;
@@ -17,6 +18,8 @@ namespace Holohouse.Prism.ViewModels
         private bool _isRunning;
         private bool _isEnabled;
         private DelegateCommand _loginCommand;
+        private DelegateCommand _registerCommand;
+        private DelegateCommand _forgotPasswordCommand;
 
         public LoginPageViewModel(
             INavigationService navigationService,
@@ -26,13 +29,16 @@ namespace Holohouse.Prism.ViewModels
             _apiService = apiService;
             Title = "Login";
             IsEnabled = true;
-
-            //TODO: delete this lines
-            Email = "jzuluaga55@hotmail.com";
-            Password = "123456";
+            IsRemember = true;
         }
 
+        public DelegateCommand ForgotPasswordCommand => _forgotPasswordCommand ?? (_forgotPasswordCommand = new DelegateCommand(ForgotPassword));
+
+        public DelegateCommand RegisterCommand => _registerCommand ?? (_registerCommand = new DelegateCommand(Register));
+
         public DelegateCommand LoginCommand => _loginCommand ?? (_loginCommand = new DelegateCommand(Login));
+
+        public bool IsRemember { get; set; }
 
         public string Email { get; set; }
 
@@ -116,6 +122,16 @@ namespace Holohouse.Prism.ViewModels
             await _navigationService.NavigateAsync("/LeasingMasterDetailPage/NavigationPage/PropertiesPage");
             IsRunning = false;
             IsEnabled = true;
+        }
+
+        private async void Register()
+        {
+            await _navigationService.NavigateAsync("RegisterPage");
+        }
+
+        private async void ForgotPassword()
+        {
+            await _navigationService.NavigateAsync("RememberPasswordPage");
         }
     }
 }

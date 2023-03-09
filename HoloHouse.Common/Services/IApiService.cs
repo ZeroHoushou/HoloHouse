@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using HoloHouse.Common.Models;
 
-
 namespace HoloHouse.Common.Services
 {
     public interface IApiService
@@ -21,5 +20,17 @@ namespace HoloHouse.Common.Services
             TokenRequest request);
 
         Task<bool> CheckConnectionAsync(string url);
+
+        Task<Response<object>> RegisterUserAsync(
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            UserRequest userRequest);
+
+        Task<Response<object>> RecoverPasswordAsync(
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            EmailRequest emailRequest);
     }
 }
