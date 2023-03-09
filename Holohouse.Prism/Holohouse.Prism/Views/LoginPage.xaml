@@ -16,7 +16,7 @@
                 AbsoluteLayout.LayoutFlags="All"
                 Padding="10">
                 <Image
-                    Margin="20"
+                    Margin="-30,60,0,60"
                     Source="logo"
                     WidthRequest="230"/>
                 <Label

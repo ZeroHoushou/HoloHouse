@@ -50,10 +50,35 @@ namespace HoloHouse.Common.Services
             string accessToken);
 
         Task<Response<object>> GetListAsync<T>(
-        string urlBase,
-        string servicePrefix,
-        string controller,
-        string tokenType,
-        string accessToken);
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            string tokenType,
+            string accessToken);
+
+        Task<Response<object>> PostAsync<T>(
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            T model,
+            string tokenType,
+            string accessToken);
+
+        Task<Response<object>> PutAsync<T>(
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            int id,
+            T model,
+            string tokenType,
+            string accessToken);
+
+        Task<Response<object>> GetLastPropertyByOwnerId(
+            string urlBase,
+            string servicePrefix,
+            string controller,
+            string tokenType,
+            string accessToken,
+            int ownerId);
     }
 }

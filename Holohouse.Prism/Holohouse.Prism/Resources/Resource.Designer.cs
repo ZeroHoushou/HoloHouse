@@ -70,6 +70,15 @@ namespace Holohouse.Prism.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Add Image.
+        /// </summary>
+        internal static string AddImage {
+            get {
+                return ResourceManager.GetString("AddImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Add Property.
         /// </summary>
         internal static string AddProperty {
@@ -106,6 +115,15 @@ namespace Holohouse.Prism.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Cancel.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Change Image.
         /// </summary>
         internal static string ChangeImage {
@@ -115,11 +133,56 @@ namespace Holohouse.Prism.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Contracts.
+        /// </summary>
+        internal static string Contracts {
+            get {
+                return ResourceManager.GetString("Contracts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Created.
+        /// </summary>
+        internal static string Created {
+            get {
+                return ResourceManager.GetString("Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a The property was {0} succesfully..
+        /// </summary>
+        internal static string CreateEditPropertyConfirm {
+            get {
+                return ResourceManager.GetString("CreateEditPropertyConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Delete.
         /// </summary>
         internal static string Delete {
             get {
                 return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Delete Image.
+        /// </summary>
+        internal static string DeleteImage {
+            get {
+                return ResourceManager.GetString("DeleteImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Edited.
+        /// </summary>
+        internal static string Edited {
+            get {
+                return ResourceManager.GetString("Edited", resourceCulture);
             }
         }
         
@@ -169,7 +232,7 @@ namespace Holohouse.Prism.Resources {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a You are not an owner.
+        ///   Busca una cadena traducida similar a This option is valid only for owners..
         /// </summary>
         internal static string ErrorNoOwner {
             get {
@@ -180,9 +243,36 @@ namespace Holohouse.Prism.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Forgot your password?.
         /// </summary>
+        internal static string Forgot {
+            get {
+                return ResourceManager.GetString("Forgot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Forgot your password?.
+        /// </summary>
         internal static string ForgotPassword {
             get {
                 return ResourceManager.GetString("ForgotPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a From Camera .
+        /// </summary>
+        internal static string FromCamera {
+            get {
+                return ResourceManager.GetString("FromCamera", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a From Gallery.
+        /// </summary>
+        internal static string FromGallery {
+            get {
+                return ResourceManager.GetString("FromGallery", resourceCulture);
             }
         }
         
@@ -223,6 +313,24 @@ namespace Holohouse.Prism.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Email or password incorrect.
+        /// </summary>
+        internal static string LoginError {
+            get {
+                return ResourceManager.GetString("LoginError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Login....
+        /// </summary>
+        internal static string Loging {
+            get {
+                return ResourceManager.GetString("Loging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Neighborhood.
         /// </summary>
         internal static string Neighborhood {
@@ -259,11 +367,29 @@ namespace Holohouse.Prism.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a You must enter a password..
+        /// </summary>
+        internal static string PasswordError {
+            get {
+                return ResourceManager.GetString("PasswordError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Enter your password....
         /// </summary>
         internal static string PasswordPlaceHolder {
             get {
                 return ResourceManager.GetString("PasswordPlaceHolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Where do you get the image?.
+        /// </summary>
+        internal static string PictureSource {
+            get {
+                return ResourceManager.GetString("PictureSource", resourceCulture);
             }
         }
         

@@ -1,39 +1,74 @@
 ﻿using HoloHouse.Common.Helpers;
 using HoloHouse.Common.Models;
+using HoloHouse.Common.Services;
 using Holohouse.Prism.ViewModels;
+using Holohouse.Prism;
 using Newtonsoft.Json;
+using Prism.Commands;
 using Prism.Navigation;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Prism.Commands;
+using System.Threading.Tasks;
 
 namespace Holohouse.Prism.ViewModels
 {
     public class PropertiesPageViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
+        private readonly IApiService _apiService;
         private OwnerResponse _owner;
         private ObservableCollection<PropertyItemViewModel> _properties;
         private DelegateCommand _addPropertyCommand;
-
+        private static PropertiesPageViewModel _instance;
 
         public PropertiesPageViewModel(
-            INavigationService navigationService) : base(navigationService)
+            INavigationService navigationService,
+            IApiService apiService) : base(navigationService)
         {
+            _instance = this;
             _navigationService = navigationService;
+            _apiService = apiService;
             Title = "Properties";
-            LoadOwner();
+            LoadProperties();
         }
 
         public DelegateCommand AddPropertyCommand => _addPropertyCommand ?? (_addPropertyCommand = new DelegateCommand(AddPropertyAsync));
+
         public ObservableCollection<PropertyItemViewModel> Properties
         {
             get => _properties;
             set => SetProperty(ref _properties, value);
         }
 
-        private void LoadOwner()
+        public static PropertiesPageViewModel GetInstance()
+        {
+            return _instance;
+        }
+
+        public async Task UpdateOwnerAsync()
+        {
+            var url = App.Current.Resources["UrlAPI"].ToString();
+            var token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
+
+            var response = await _apiService.GetOwnerByEmailAsync(
+                url,
+                "/api",
+                "/Owners/GetOwnerByEmail",
+                "bearer",
+                token.Token,
+                _owner.Email);
+
+            if (response.IsSuccess)
+            {
+                var owner = (OwnerResponse)response.Result;
+                Settings.Owner = JsonConvert.SerializeObject(owner);
+                _owner = owner;
+                LoadProperties();
+            }
+        }
+
+        private void LoadProperties()
         {
             _owner = JsonConvert.DeserializeObject<OwnerResponse>(Settings.Owner);
 
@@ -63,6 +98,7 @@ namespace Holohouse.Prism.ViewModels
                 Stratum = p.Stratum
             }).ToList());
         }
+
         private async void AddPropertyAsync()
         {
             await _navigationService.NavigateAsync("EditPropertyPage");
