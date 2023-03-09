@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace HoloHouse.Web.Controllers.API
 {
@@ -90,9 +91,9 @@ namespace HoloHouse.Web.Controllers.API
                 token = myToken
             }, protocol: HttpContext.Request.Scheme);
 
-            _mailHelper.SendMail(request.Email, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                $"To allow the user, " +
-                $"please click on this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+            //_mailHelper.SendMail(request.Email, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+            //    $"To allow the user, " +
+            //    $"please click on this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
 
             return Ok(new Response<object>
             {
@@ -126,9 +127,9 @@ namespace HoloHouse.Web.Controllers.API
 
             var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
             var link = Url.Action("ResetPassword", "Account", new { token = myToken }, protocol: HttpContext.Request.Scheme);
-            _mailHelper.SendMail(request.Email, "Password Reset", $"<h1>Recover Password</h1>" +
-                $"To reset the password click in this link:</br></br>" +
-                $"<a href = \"{link}\">Reset Password</a>");
+            //_mailHelper.SendMail(request.Email, "Password Reset", $"<h1>Recover Password</h1>" +
+            //    $"To reset the password click in this link:</br></br>" +
+            //    $"<a href = \"{link}\">Reset Password</a>");
 
             return Ok(new Response<object>
             {
