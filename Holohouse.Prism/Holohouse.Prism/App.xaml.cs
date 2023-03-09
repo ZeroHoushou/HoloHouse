@@ -1,9 +1,13 @@
 using Example;
 using Holohouse.Prism.ViewModels;
 using Holohouse.Prism.Views;
+using HoloHouse.Common.Helpers;
+using HoloHouse.Common.Models;
 using HoloHouse.Common.Services;
+using Newtonsoft.Json;
 using Prism;
 using Prism.Ioc;
+using System;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
@@ -22,7 +26,15 @@ namespace Holohouse.Prism
             
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTI4MTYzOEAzMjMwMmUzNDJlMzBHRGxJYjN2SkFmbElxTXNsTm5OM25LYTlhaldOcGlGb05GM3NzbTlSNUk4PQ==");
             InitializeComponent();
-            await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+            var token = JsonConvert.DeserializeObject<TokenResponse>(Settings.Token);
+            if (Settings.IsRemembered && token?.Expiration > DateTime.Now)
+            {
+                await NavigationService.NavigateAsync("/LeasingMasterDetailPage/NavigationPage/PropertiesPage");
+            }
+            else
+            {
+                await NavigationService.NavigateAsync("/NavigationPage/LoginPage");
+            }
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -42,6 +54,7 @@ namespace Holohouse.Prism
             containerRegistry.RegisterForNavigation<MapPage, MapPageViewModel>();
             containerRegistry.RegisterForNavigation<RegisterPage, RegisterPageViewModel>();
             containerRegistry.RegisterForNavigation<RememberPasswordPage, RememberPasswordPageViewModel>();
+            containerRegistry.RegisterForNavigation<ChangePasswordPage, ChangePasswordPageViewModel>();
         }
     }
 }
