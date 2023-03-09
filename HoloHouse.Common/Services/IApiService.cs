@@ -48,5 +48,12 @@ namespace HoloHouse.Common.Services
             ChangePasswordRequest changePasswordRequest,
             string tokenType,
             string accessToken);
+
+        Task<Response<object>> GetListAsync<T>(
+        string urlBase,
+        string servicePrefix,
+        string controller,
+        string tokenType,
+        string accessToken);
     }
 }

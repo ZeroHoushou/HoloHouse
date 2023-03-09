@@ -24,6 +24,7 @@ namespace Holohouse.Prism.Droid
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
             new SfRotatorRenderer();
             new SfBusyIndicatorRenderer();
+            Xamarin.FormsMaps.Init(this,savedInstanceState);
             LoadApplication(new App(new AndroidInitializer()));
         }
 

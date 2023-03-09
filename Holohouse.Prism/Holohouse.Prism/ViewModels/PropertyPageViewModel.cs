@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Prism.Commands;
 
 namespace Holohouse.Prism.ViewModels
 {
@@ -12,12 +13,16 @@ namespace Holohouse.Prism.ViewModels
     {
         private PropertyResponse _property;
         private ObservableCollection<RotatorModel> _imageCollection;
+        private DelegateCommand _editPropertyCommand;
+        private readonly INavigationService _navigationService;
 
-        public PropertyPageViewModel(INavigationService navigationService) : base(navigationService)
+        public PropertyPageViewModel(
+            INavigationService navigationService) : base(navigationService)
         {
             Title = "Details";
+            _navigationService = navigationService;
         }
-
+        public DelegateCommand EditPropertyCommand => _editPropertyCommand ?? (_editPropertyCommand = new DelegateCommand(EditPropertyAsync));
         public PropertyResponse Property
         {
             get => _property;
@@ -43,6 +48,15 @@ namespace Holohouse.Prism.ViewModels
             {
                 Image = pi.ImageUrl
             }).ToList());
+        }
+        private async void EditPropertyAsync()
+        {
+            var parameters = new NavigationParameters
+            {
+                { "property", Property }
+            };
+
+            await _navigationService.NavigateAsync("EditPropertyPage", parameters);
         }
     }
 }

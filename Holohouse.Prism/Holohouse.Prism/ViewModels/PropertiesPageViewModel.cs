@@ -6,6 +6,7 @@ using Prism.Navigation;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Prism.Commands;
 
 namespace Holohouse.Prism.ViewModels
 {
@@ -14,6 +15,8 @@ namespace Holohouse.Prism.ViewModels
         private readonly INavigationService _navigationService;
         private OwnerResponse _owner;
         private ObservableCollection<PropertyItemViewModel> _properties;
+        private DelegateCommand _addPropertyCommand;
+
 
         public PropertiesPageViewModel(
             INavigationService navigationService) : base(navigationService)
@@ -23,6 +26,7 @@ namespace Holohouse.Prism.ViewModels
             LoadOwner();
         }
 
+        public DelegateCommand AddPropertyCommand => _addPropertyCommand ?? (_addPropertyCommand = new DelegateCommand(AddPropertyAsync));
         public ObservableCollection<PropertyItemViewModel> Properties
         {
             get => _properties;
@@ -58,6 +62,10 @@ namespace Holohouse.Prism.ViewModels
                 SquareMeters = p.SquareMeters,
                 Stratum = p.Stratum
             }).ToList());
+        }
+        private async void AddPropertyAsync()
+        {
+            await _navigationService.NavigateAsync("EditPropertyPage");
         }
     }
 }
