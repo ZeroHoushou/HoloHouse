@@ -85,11 +85,19 @@ namespace Holohouse.Prism.ViewModels
             int min = 990000000;
             int max = 999999999;
 
+            //var contract = string.IsNullOrEmpty(p.Contracts.ToString());
+            //var ContracStatic = new ObservableCollection<ContractResponse>
+            //{
+            //    new ContractResponse { Id = 1, Remarks = "Contratode inicio",Price=1.2m,StartDate= DateTime.Now,EndDate=DateTime.Now, Lessee={FirstName="Contrato Inicio" } },
+             
+            //};
+
             Properties = new ObservableCollection<PropertyItemViewModel>(_owner.Properties.Select(p => new PropertyItemViewModel(_navigationService)
             {
                 Address = p.Address,
                 PhoneNumber = (rnd.Next(min,max + 1)).ToString(),
-                Contracts = p.Contracts,
+                //Contracts = string.IsNullOrEmpty(p.Contracts.ToString())?p.Contracts:ContracStatic,
+                Contracts=p.Contracts,
                 HasParkingLot = p.HasParkingLot,
                 IsAvailable = p.IsAvailable,
                 Id = p.Id,

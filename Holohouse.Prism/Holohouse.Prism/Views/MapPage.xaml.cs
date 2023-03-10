@@ -64,15 +64,14 @@ namespace Holohouse.Prism.Views
         private async void MoveMapToCurrentPositionAsync()
         {
             await _geolocatorService.GetLocationAsync();
-            if (_geolocatorService.Latitude != 0 && _geolocatorService.Longitude != 0)
-            {
+            //if (_geolocatorService.Latitude != 0 && _geolocatorService.Longitude != 0)
+            //{
                 var position = new Position(
-                    _geolocatorService.Latitude,
-                    _geolocatorService.Longitude);
+                    -11.991283, -77.082233);
                 MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(
                     position,
                     Distance.FromKilometers(.5)));
-            }
+           // }
         }
     }
 }

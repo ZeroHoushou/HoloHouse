@@ -187,8 +187,8 @@ namespace Holohouse.Prism.ViewModels
         {
             Roles = new ObservableCollection<Role>
             {
-                new Role { Id = 2, Name = "Lessee" },
-                new Role { Id = 1, Name = "Owner" }
+                new Role { Id = 2, Name = "Arrendatario" },
+                new Role { Id = 1, Name = "Dueño" }
             };
         }
     }
